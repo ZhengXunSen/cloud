@@ -10,5 +10,6 @@
 
     <modules>
         <module>config-server</module>
+        <module>cloud-bus</module>
     </modules>
 </project>
