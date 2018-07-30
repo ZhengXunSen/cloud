@@ -13,7 +13,7 @@
 
     <parent>
         <groupId>com.zxs.cloud</groupId>
-        <artifactId>SpringCloud</artifactId>
+        <artifactId>zxs-spring-cloud</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 

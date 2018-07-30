@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.zxs.cloud</groupId>
-    <artifactId>SpringCloud</artifactId>
+    <artifactId>zxs-spring-cloud</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <parent>
@@ -26,6 +26,7 @@
         <module>config-server</module>
         <module>cloud-bus</module>
         <module>consul-server</module>
+        <module>eureka-server</module>
     </modules>
 
     <dependencies>
@@ -33,6 +34,27 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
         </dependency>
     </dependencies>
 </project>
