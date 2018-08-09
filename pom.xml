@@ -27,6 +27,7 @@
         <module>cloud-bus</module>
         <module>consul-server</module>
         <module>eureka-server</module>
+        <module>spark</module>
     </modules>
 
     <dependencies>
