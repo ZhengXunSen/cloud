@@ -8,4 +8,6 @@ import org.apache.spark.SparkConf;
 public interface SparkService {
 
     String fileReader(SparkConf sparkConf);
+
+    void operateRDD(SparkConf sparkConf);
 }
