@@ -1,4 +1,4 @@
-package java.com.zxs.cloud.cloudbus;
+package com.zxs.cloud.cloudbus;
 
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
