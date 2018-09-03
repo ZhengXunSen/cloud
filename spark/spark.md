@@ -457,5 +457,27 @@ export PATH=$ZOOKEEPER_HOME/bin:$PATH
 ```
 firewall-cmd --zone=public --add-port=3888/tcp --permanent
 ```
+## 安装kafka
+1.下载`wget https://mirrors.cnnic.cn/apache/kafka/2.0.0/kafka_2.12-2.0.0.tgz`
+
+2.解压`tar -zxvf kafka_2.12-2.0.0.tgz`
+
+3.配置环境变量：
+```
+export KAFKA_HOME=/home/spark/kafka_2.12-2.0.0
+export PATH=$PATH:$KAFKA_HOME/bin
+```
+
+4.修改配置$KAFKA_HOME/config目录下的server.properties
+```
+#id唯一
+broker.id=181
+delete.topic.enable=true
+listeners = PLAINTEXT://zxs-1:9092
+log.dirs=/home/spark/kafka_2.12-2.0.0/log/
+#zookeeper集群连接
+zookeeper.connect=zxs-1:2181,zxs-2:2181,zxs-3:2181
+```
+5.后台启动：`setsid $KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties`
 
 
