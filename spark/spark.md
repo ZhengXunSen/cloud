@@ -457,6 +457,7 @@ export PATH=$ZOOKEEPER_HOME/bin:$PATH
 ```
 firewall-cmd --zone=public --add-port=3888/tcp --permanent
 ```
+8. 修改zkServer.sh中的_ZOO_DAEMON_OUT为指定文件，防止后台启动重定向文件到处生成。也可以配置相应的log目录
 ## 安装kafka
 1.下载`wget https://mirrors.cnnic.cn/apache/kafka/2.0.0/kafka_2.12-2.0.0.tgz`
 
