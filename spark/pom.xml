@@ -91,6 +91,17 @@
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>org.apache.kafka</artifactId>
+                    <groupId>kafka-clients</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-streaming-kafka-0-10_2.11</artifactId>
+            <version>${spark.version}</version>
         </dependency>
 
     </dependencies>

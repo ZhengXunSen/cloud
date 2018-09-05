@@ -10,4 +10,6 @@ public interface SparkService {
     String fileReader(SparkConf sparkConf);
 
     void operateRDD(SparkConf sparkConf);
+
+    void sparkStreaming(SparkConf sparkConf) throws InterruptedException;
 }

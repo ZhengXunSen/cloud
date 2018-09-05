@@ -22,7 +22,7 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-config-server</artifactId>
         </dependency>
-        <!-- 使用bus总线的方式通知所有的微服务配置文件需要刷新 -->
+         <!--使用bus总线的方式通知所有的微服务配置文件需要刷新-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bus-kafka</artifactId>
