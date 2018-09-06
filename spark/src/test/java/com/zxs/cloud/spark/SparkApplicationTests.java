@@ -1,7 +1,6 @@
 package com.zxs.cloud.spark;
 
 import com.zxs.cloud.spark.service.SparkService;
-import com.zxs.cloud.spark.util.JavaSparkContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -26,8 +25,6 @@ import java.net.URISyntaxException;
 @Slf4j
 public class SparkApplicationTests {
 
-    @Autowired
-    private JavaSparkContextUtil javaSparkContextUtil;
     @Value("${spark.master}")
     private String sparkMaster;
     @Autowired

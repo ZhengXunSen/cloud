@@ -18,19 +18,20 @@ public class KafkaConfig {
     @Value("${spring.kafka.consumer.group-id}")
     private String groupId;
 
-    @Value("${spring.kafka.producer.key-serializer}")
-    private String serializer;
-
     @Value("${spring.kafka.consumer.key-deserializer}")
     private String deserializer;
+
+    @Value("${spring.kafka.consumer.auto-offset-reset}")
+    private String offset;
 
     public Map<String, Object> getKafkaParam(){
         Map<String, Object > kafkaParams = new HashMap<>();
         kafkaParams.put("bootstrap.servers", brokers);
         kafkaParams.put("group.id", groupId);
-        kafkaParams.put("key.serializer", serializer);
         kafkaParams.put("key.deserializer", deserializer);
         kafkaParams.put("value.deserializer", deserializer);
+        kafkaParams.put("auto.offset.reset", "latest");
+        kafkaParams.put("enable.auto.commit", false);
         return kafkaParams;
     }
 }
