@@ -1,5 +1,6 @@
 package com.zxs.cloud.spark.config;
 
+import com.zxs.cloud.spark.exception.SparkRuntimeException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.SparkConf;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -64,19 +65,20 @@ public class SparkConfigAspect {
         }
         if (!haveNessaryArg) {
             log.error("缺少JavaSparkContext参数初始化环境");
-            throw new Exception();
+            throw new SparkRuntimeException();
         }
     }
 
     private void initSparkConf() {
-        sparkConf.setAppName(sparkConfig.appName());
-        sparkConf.set("spark.cores.max", sparkConfig.maxCores());
-        sparkConf.set("spark.executor.memory", sparkConfig.executorMemory());
-        sparkConf.set("spark.eventLog.enabled", sparkConfig.logEnable());
+        sparkConf.setAppName(sparkConfig.appName())
+                .set("spark.cores.max", sparkConfig.maxCores())
+                .set("spark.executor.memory", sparkConfig.executorMemory())
+                .set("spark.eventLog.enabled", sparkConfig.logEnable())
+                .set("spark.driver.allowMultipleContexts",sparkConfig.allowMultipleContexts())
+                .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
         setMaster();
         setJars();
         setLogDir();
-        sparkConf.set("spark.driver.allowMultipleContexts",sparkConfig.allowMultipleContexts());
     }
 
     private void setJars() {

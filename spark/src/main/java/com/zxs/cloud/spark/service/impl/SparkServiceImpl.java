@@ -2,7 +2,10 @@ package com.zxs.cloud.spark.service.impl;
 
 import com.zxs.cloud.spark.config.KafkaConfig;
 import com.zxs.cloud.spark.config.SparkConfig;
+import com.zxs.cloud.spark.dto.MessageDto;
+import com.zxs.cloud.spark.model.User;
 import com.zxs.cloud.spark.service.SparkService;
+import com.zxs.cloud.spark.util.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.TopicPartition;
@@ -86,17 +89,16 @@ public class SparkServiceImpl implements SparkService {
         topicPartitions.add(new TopicPartition(topics, 2));
 
         //通过KafkaUtils.createDirectStream(...)获得kafka数据，kafka相关参数由kafkaParams指定
-        JavaInputDStream<ConsumerRecord<Object, Object>> lines;
-        lines = KafkaUtils.createDirectStream(
-                ssc,
-                LocationStrategies.PreferConsistent(),
-                ConsumerStrategies.Assign(topicPartitions,kafkaParams)
-        );
+        JavaInputDStream<ConsumerRecord<Object, Object>> lines = KafkaUtils.createDirectStream(ssc,LocationStrategies.PreferConsistent(),ConsumerStrategies.Assign(topicPartitions,kafkaParams));
+        lines.map(ConsumerRecord::value).map(value -> {
+            MessageDto messageDto = JsonUtils.parse(value.toString(), MessageDto.class);
+            log.warn("收到的User对象名字为：{}", JsonUtils.parse(messageDto.getData(), User.class).getUserName());
+            return messageDto;
+        });
         JavaPairDStream<String, Integer> counts =
                 lines.flatMap(x -> Arrays.asList(x.value().toString().split(" ")).iterator())
                         .mapToPair(x -> new Tuple2<String, Integer>(x, 1))
                         .reduceByKey((x, y) -> x + y);
-        lines.mapToPair(record -> new Tuple2<>(record.key(), record.value())).reduceByKey((x,y) -> x.toString()+ " | " +y.toString()).print();
         counts.foreachRDD(count -> log.warn("统计的结果如下：{}", count.collect()));
         ssc.start();
         try {

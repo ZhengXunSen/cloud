@@ -1,6 +1,5 @@
 package com.zxs.cloud.spark.dto;
 
-import com.zxs.cloud.spark.model.base.SparkModel;
 import lombok.Data;
 
 import java.util.Date;
@@ -9,17 +8,19 @@ import java.util.Date;
  * Created by bill.zheng in 2018/9/4
  */
 @Data
-public class MessageDto<T extends SparkModel> {
+public class MessageDto {
 
     private Long id;
 
-    private T model;
+    private String data;
 
     private Date sendTime;
 
-    public MessageDto(T t){
-        this.id = t.getId();
-        this.model = t;
-        this.sendTime = new Date();
+    public static MessageDto buildMessage(Long id,String data){
+        MessageDto messageDto = new MessageDto();
+        messageDto.setId(id);
+        messageDto.setSendTime(new Date());
+        messageDto.setData(data);
+        return messageDto;
     }
 }
