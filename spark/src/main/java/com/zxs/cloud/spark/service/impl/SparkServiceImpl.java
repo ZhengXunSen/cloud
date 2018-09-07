@@ -31,7 +31,7 @@ import java.util.*;
 @Slf4j
 public class SparkServiceImpl implements SparkService {
 
-    @Value("${spring.kafka.spark.topic}")
+    @Value("${spring.kafka.test.topic}")
     private String topics;
 
     @Autowired
@@ -77,41 +77,27 @@ public class SparkServiceImpl implements SparkService {
         JavaSparkContext sc = new JavaSparkContext(sparkConf);
         sc.setLogLevel("WARN");
         JavaStreamingContext ssc = new JavaStreamingContext(sc, Durations.seconds(10));
-        Collection<String> topicsSet = new HashSet<>(Arrays.asList(topics.split(",")));
         //kafka相关参数，必要！缺了会报错
         Map<String, Object> kafkaParams = kafkaConfig.getKafkaParam();
         //Topic分区
-        Map<TopicPartition, Long> offsets = new HashMap<>();
-        offsets.put(new TopicPartition(topics, 1), 2L);
-//        JavaStreamingContext javaStreamingContext = new JavaStreamingContext(sc, Durations.seconds(1));
-//        javaStreamingContext.textFileStream("/app/hadoop-3.1.0/dataDir/hdfs/data/hdfs-site.xml");
+        List<TopicPartition> topicPartitions = new ArrayList<>();
+        topicPartitions.add(new TopicPartition(topics, 0));
+        topicPartitions.add(new TopicPartition(topics, 1));
+        topicPartitions.add(new TopicPartition(topics, 2));
 
         //通过KafkaUtils.createDirectStream(...)获得kafka数据，kafka相关参数由kafkaParams指定
         JavaInputDStream<ConsumerRecord<Object, Object>> lines;
-        //必须对接单一分区
         lines = KafkaUtils.createDirectStream(
                 ssc,
                 LocationStrategies.PreferConsistent(),
-                ConsumerStrategies.Subscribe(topicsSet, kafkaParams)
+                ConsumerStrategies.Assign(topicPartitions,kafkaParams)
         );
-        //这里就跟之前的demo一样了，只是需要注意这边的lines里的参数本身是个ConsumerRecord对象
         JavaPairDStream<String, Integer> counts =
                 lines.flatMap(x -> Arrays.asList(x.value().toString().split(" ")).iterator())
                         .mapToPair(x -> new Tuple2<String, Integer>(x, 1))
                         .reduceByKey((x, y) -> x + y);
         lines.mapToPair(record -> new Tuple2<>(record.key(), record.value())).reduceByKey((x,y) -> x.toString()+ " | " +y.toString()).print();
-        log.warn("统计结果为：{}", counts.count());
-//        counts.foreachRDD(count -> log.warn("统计的结果如下：{}", count.collect()));
-        counts.print();
-//  可以打印所有信息，看下ConsumerRecord的结构
-        /*lines.foreachRDD(rdd -> {
-            if (!rdd.isEmpty())
-                return;
-            else
-                rdd.foreach(x -> {
-                    log.warn("查询到的值为:{}", x);
-                });
-        });*/
+        counts.foreachRDD(count -> log.warn("统计的结果如下：{}", count.collect()));
         ssc.start();
         try {
             ssc.awaitTermination();
