@@ -30,7 +30,7 @@ public class KafkaConfig {
         kafkaParams.put("group.id", groupId);
         kafkaParams.put("key.deserializer", deserializer);
         kafkaParams.put("value.deserializer", deserializer);
-        kafkaParams.put("auto.offset.reset", "latest");
+        kafkaParams.put("auto.offset.reset", offset);
         kafkaParams.put("enable.auto.commit", false);
         return kafkaParams;
     }
