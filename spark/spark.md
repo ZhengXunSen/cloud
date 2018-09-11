@@ -480,5 +480,90 @@ log.dirs=/home/spark/kafka_2.12-2.0.0/log/
 zookeeper.connect=zxs-1:2181,zxs-2:2181,zxs-3:2181
 ```
 5.后台启动：`setsid $KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties`
-
+## 安装hive
+1.下载hive:`wget http://mirror.bit.edu.cn/apache/hive/hive-3.1.0/apache-hive-3.1.0-bin.tar.gz`
+2.解压：tar -zxvf apache-hive-3.1.0-bin.tar.gz
+3.配置环境变量：
+```
+export HIVE_HOME=/home/hadoop/apache-hive-3.1.0-bin
+export PATH=$PATH:$HIVE_HOME/bin
+```
+4.修改配置文件：
+> 在conf目录下`vim hive-site.xml`,输入
+```
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+    <property>
+       <name>javax.jdo.option.ConnectionURL</name>
+       <value>jdbc:mysql://zxs-1:3306/hive?&amp;createDatabaseIfNotExist=true&amp;characterEncoding=UTF-8&amp;useSSL=false</value>
+    </property>
+    <property>
+        <name>javax.jdo.option.ConnectionUserName</name>
+        <value>zxs</value>
+    </property>
+    <property>
+        <name>javax.jdo.option.ConnectionPassword</name>
+        <value>jfz123456</value>
+    </property>
+    <property>
+        <name>javax.jdo.option.ConnectionDriverName</name>
+        <value>com.mysql.jdbc.Driver</value>
+    </property>
+    <property>
+        <name>datanucleus.schema.autoCreateAll</name>
+        <value>true</value> </property>
+    <property>
+        <name>hive.metastore.schema.verification</name>
+        <value>false</value>
+     </property>
+    <property>
+      <name>hive.execution.engine</name>
+      <value>spark</value>
+    </property>
+    
+    <property>
+      <name>hive.enable.spark.execution.engine</name>
+      <value>true</value>
+    </property>
+    
+    <property>
+      <name>spark.home</name>
+      <value>/app/spark-2.3.1-bin-hadoop2.7</value>
+    </property>
+    <property>
+      <name>spark.master</name>
+      <value>spark://zxs-1:7077</value>
+    </property>
+    <property>
+      <name>spark.enentLog.enabled</name>
+      <value>true</value>
+    </property>
+    <property>
+      <name>spark.enentLog.dir</name>
+      <value>/home/hadoop/apache-hive-3.1.0-bin/logs/spark-log</value>
+    </property>
+    <property>
+      <name>spark.serializer</name>
+      <value>org.apache.spark.serializer.KryoSerializer</value>
+    </property>
+    <property>
+      <name>spark.executor.memeory</name>
+      <value>1g</value>
+    </property>
+    <property>
+      <name>spark.driver.memeory</name>
+      <value>1g</value>
+    </property>
+    <property>
+      <name>spark.executor.extraJavaOptions</name>
+      <value>-XX:+PrintGCDetails -Dkey=value -Dnumbers="one two three"</value>
+    </property>
+</configuration>
+```
+> 配置hive-env.sh：`cp hive-env.sh.template hive-env.sh`;`vim hive-env.sh`
+```$xslt
+HADOOP_HOME=/opt/hadoop-2.7.5
+export HIVE_CONF_DIR=/home/hadoop/apache-hive-3.1.0-bin
+```
 
