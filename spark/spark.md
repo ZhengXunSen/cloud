@@ -481,8 +481,10 @@ zookeeper.connect=zxs-1:2181,zxs-2:2181,zxs-3:2181
 ```
 5.后台启动：`setsid $KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties`
 ## 安装hive
-1.下载hive:`wget http://mirror.bit.edu.cn/apache/hive/hive-3.1.0/apache-hive-3.1.0-bin.tar.gz`
-2.解压：tar -zxvf apache-hive-3.1.0-bin.tar.gz
+1.下载hive:`wget http://mirror.bit.edu.cn/apache/hive/hive-3.0.0/apache-hive-3.0.0-bin.tar.gz`
+
+2.解压：tar -zxvf apache-hive-3.0.0-bin.tar.gz
+
 3.配置环境变量：
 ```
 export HIVE_HOME=/home/hadoop/apache-hive-3.1.0-bin
@@ -494,6 +496,15 @@ export PATH=$PATH:$HIVE_HOME/bin
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
+<!--<!--hive元数据服务的地址,以下hive远程连接配置适用于本地spark连接远程hive-->
+  <property>
+    <name>hive.metastore.uris</name>
+    <value>thrift://zxs-1:9083</value>
+  </property>
+  <property>
+    <name>hive.server2.thrift.port</name>
+    <value>10000</value>
+  </property>-->
     <property>
        <name>javax.jdo.option.ConnectionURL</name>
        <value>jdbc:mysql://zxs-1:3306/hive?&amp;createDatabaseIfNotExist=true&amp;characterEncoding=UTF-8&amp;useSSL=false</value>
@@ -564,6 +575,19 @@ export PATH=$PATH:$HIVE_HOME/bin
 > 配置hive-env.sh：`cp hive-env.sh.template hive-env.sh`;`vim hive-env.sh`
 ```$xslt
 HADOOP_HOME=/opt/hadoop-2.7.5
-export HIVE_CONF_DIR=/home/hadoop/apache-hive-3.1.0-bin
+export HIVE_CONF_DIR=/home/hadoop/apache-hive-3.0.0-bin
 ```
 
+5.将mysql连接的jar包拷到$HIVE_HOME/lib目录下
+
+6.将上述hive-site.xml拷贝到$SPARK_HOME/conf目录，将mysql连接的jar包拷贝到lib目录下
+
+7.修改hadoop中hdfs-site.xml文件配置，使之不限用户操作
+```aidl
+   <property>
+     <name>dfs.permissions.enabled</name>
+    <value>false</value>
+   </property>
+```
+
+8.关闭hadoop的安全模式：`hadoop dfsadmin -safemode leave`
