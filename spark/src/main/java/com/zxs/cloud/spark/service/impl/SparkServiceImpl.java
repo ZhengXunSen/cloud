@@ -10,8 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.spark.SparkConf;
+import org.apache.spark.SparkContext;
+import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
@@ -25,7 +28,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import scala.Tuple2;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by bill.zheng in 2018/8/22
@@ -36,6 +42,18 @@ public class SparkServiceImpl implements SparkService {
 
     @Value("${spring.kafka.test.topic}")
     private String topics;
+
+    @Value("${spring.datasource.url}")
+    private String dataUrl;
+
+    @Value("${spring.datasource.username}")
+    private String dataUser;
+
+    @Value("${spring.datasource.password}")
+    private String dataPwd;
+
+    @Value("${spring.datasource.driver-class-name}")
+    private String dataDriver;
 
     @Autowired
     private KafkaConfig kafkaConfig;
@@ -61,15 +79,17 @@ public class SparkServiceImpl implements SparkService {
     @SparkConfig(executorMemory = "1500m", sparkMaster = "local[2]", appName = "fileReader")
     public void operateRDD(SparkConf sparkConf) {
         SparkSession sparkSession = SparkSession.builder().config(sparkConf).getOrCreate();
-        try (JavaSparkContext javaSparkContext = new JavaSparkContext(sparkSession.sparkContext())) {
+        try (JavaSparkContext sc = new JavaSparkContext(sparkSession.sparkContext())) {
             //设置hadoop配置
-            javaSparkContext.hadoopConfiguration().set("fs.defaultFS", "hdfs://zxs-1:9000");
+            /*javaSparkContext.hadoopConfiguration().set("fs.defaultFS", "hdfs://zxs-1:9000");
             javaSparkContext.hadoopConfiguration().set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
             javaSparkContext.hadoopConfiguration().set("dfs.client.block.write.replace-datanode-on-failure.policy", "NEVER");
             //cache将rdd内容缓存起来，实际场景不建议
             JavaRDD<String> lines = javaSparkContext.textFile("/app/hadoop-3.1.0/dataDir/hdfs/data/hdfs-site.xml").cache();
             //map转换操作，和lambada表达式map作用相同
-            lines.collect().stream().map(s -> s.concat("bill.zheng 测试")).forEach(s -> log.info("转换后的字是:{}", s));
+            lines.collect().stream().map(s -> s.concat("bill.zheng 测试")).forEach(s -> log.info("转换后的字是:{}", s));*/
+            JavaPairRDD javaRDD = sc.parallelize(Arrays.asList("a,b,b,c,c".split(","))).mapToPair(x -> new Tuple2<String, Integer>(x,1)).reduceByKey((x, y) -> x+y);
+           log.warn("统计结果：" + javaRDD.collect());
         }
     }
 
@@ -77,7 +97,8 @@ public class SparkServiceImpl implements SparkService {
     @SparkConfig(executorMemory = "1500m", sparkMaster = "local[2]",appName = "kafka")
     public void sparkStreaming(SparkConf sparkConf) {
         sparkConf.set("spark.streaming.kafka.maxRatePerPartition", "10");
-        JavaSparkContext sc = new JavaSparkContext(sparkConf);
+        SparkSession sparkSession = SparkSession.builder().config(sparkConf).getOrCreate();
+        JavaSparkContext sc = new JavaSparkContext(sparkSession.sparkContext());
         sc.setLogLevel("WARN");
         JavaStreamingContext ssc = new JavaStreamingContext(sc, Durations.seconds(10));
         //kafka相关参数，必要！缺了会报错
@@ -108,5 +129,30 @@ public class SparkServiceImpl implements SparkService {
             Thread.currentThread().interrupt();
         }
         ssc.close();
+    }
+
+    @Override
+    @SparkConfig(executorMemory = "1500m", sparkMaster = "local[2]",appName = "hive")
+    public void sparkSql(SparkConf sparkConf) {
+        SparkSession sparkSession = SparkSession.builder().config(sparkConf).enableHiveSupport().getOrCreate();
+        sparkSession.sql("insert into default.test values(3,'dc')").writeStream();
+        sparkSession.sql("select * from default.test").show();
+    }
+
+    @Override
+    @SparkConfig(executorMemory = "1500m", sparkMaster = "local[2]",appName = "mysql")
+    public void sparkSqlOpMysql(SparkConf sparkConf) {
+        SparkSession sparkSession = SparkSession.builder().config(sparkConf).getOrCreate();
+        DataFrameReader dataFrame = sparkSession.read().format("jdbc").option("driver", dataDriver).option("url", dataUrl).option("user", dataUser).option("password", dataPwd);
+        dataFrame.option("dbtable", "user");
+        SparkContext sc = sparkSession.sparkContext();
+        Arrays.stream(sc.textFile("C:\\Users\\bill.zheng\\Desktop\\a.txt",10).collect()).map(s -> s.split(",")).map(s -> {
+            User user = new User();
+            user.setId(3L);
+            user.setUserName("dc");
+            return user;
+        });
+        sparkSession.sql("insert into default.test values(3,'dc')").writeStream();
+        sparkSession.sql("select * from default.test").show();
     }
 }

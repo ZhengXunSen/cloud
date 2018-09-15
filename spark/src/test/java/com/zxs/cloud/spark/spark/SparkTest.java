@@ -28,4 +28,9 @@ public class SparkTest {
             Thread.currentThread().interrupt();
         }
     }
+
+    @Test
+    public void testSparkSql(){
+        sparkService.sparkSql(new SparkConf());
+    }
 }

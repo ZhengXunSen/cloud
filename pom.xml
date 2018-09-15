@@ -69,7 +69,7 @@
         </dependency>
 
         <!-- jackson json -->
-        <dependency>
+        <!--<dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <version>${jack.version}</version>
@@ -88,6 +88,6 @@
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-jaxb-annotations</artifactId>
             <version>${jack.version}</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 </project>

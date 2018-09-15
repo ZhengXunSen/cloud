@@ -12,4 +12,8 @@ public interface SparkService {
     void operateRDD(SparkConf sparkConf);
 
     void sparkStreaming(SparkConf sparkConf) throws InterruptedException;
+
+    void sparkSql(SparkConf sparkConf);
+
+    void sparkSqlOpMysql(SparkConf sparkConf);
 }

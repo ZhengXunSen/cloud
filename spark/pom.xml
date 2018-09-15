@@ -20,6 +20,7 @@
     <properties>
         <scala.version>2.11.12</scala.version>
         <spark.version>2.3.1</spark.version>
+        <hadoop.version>2.9.1</hadoop.version>
     </properties>
 
     <dependencies>
@@ -74,13 +75,13 @@
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-client</artifactId>
-            <version>3.1.1</version>
+            <version>${hadoop.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-common -->
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
-            <version>3.1.1</version>
+            <version>${hadoop.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -92,8 +93,10 @@
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-hdfs</artifactId>
-            <version>3.1.1</version>
+            <version>${hadoop.version}</version>
         </dependency>
+
+        <!--kafka-->
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
@@ -108,6 +111,34 @@
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-streaming-kafka-0-10_2.11</artifactId>
             <version>${spark.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_2.11</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-hive_2.11</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.hive/hive-jdbc -->
+        <dependency>
+            <groupId>org.apache.hive</groupId>
+            <artifactId>hive-jdbc</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hive</groupId>
+            <artifactId>hive-exec</artifactId>
+            <version>3.1.0</version>
         </dependency>
 
     </dependencies>

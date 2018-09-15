@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+    <!--hive元数据服务的地址-->
+    <property>
+        <name>hive.metastore.uris</name>
+        <value>thrift://zxs-1:9083</value>
+    </property>
+    <property>
+        <name>hive.server2.thrift.port</name>
+        <value>10000</value>
+    </property>
+    <property>
+        <name>javax.jdo.option.ConnectionURL</name>
+        <value>jdbc:mysql://zxs-1:3306/hive?&amp;createDatabaseIfNotExist=true&amp;characterEncoding=UTF-8&amp;useSSL=false</value>
+    </property>
+    <property>
+        <name>javax.jdo.option.ConnectionUserName</name>
+        <value>zxs</value>
+    </property>
+    <property>
+        <name>javax.jdo.option.ConnectionPassword</name>
+        <value>jfz123456</value>
+    </property>
+    <property>
+        <name>javax.jdo.option.ConnectionDriverName</name>
+        <value>com.mysql.jdbc.Driver</value>
+    </property>
+    <property>
+        <name>datanucleus.schema.autoCreateAll</name>
+        <value>true</value> </property>
+    <property>
+        <name>hive.metastore.schema.verification</name>
+        <value>false</value>
+    </property>
+    <!--<property>
+      <name>hive.execution.engine</name>
+      <value>spark</value>
+    </property>-->
+
+    <property>
+        <name>hive.enable.spark.execution.engine</name>
+        <value>true</value>
+    </property>
+
+    <property>
+        <name>spark.home</name>
+        <value>/app/spark-2.3.1-bin-hadoop2.7</value>
+    </property>
+    <property>
+        <name>spark.master</name>
+        <value>spark://zxs-1:7077</value>
+    </property>
+    <property>
+        <name>spark.enentLog.enabled</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>spark.enentLog.dir</name>
+        <value>/home/hadoop/apache-hive-3.1.0-bin/logs/spark-log</value>
+    </property>
+    <property>
+        <name>spark.serializer</name>
+        <value>org.apache.spark.serializer.KryoSerializer</value>
+    </property>
+    <property>
+        <name>spark.executor.memeory</name>
+        <value>1g</value>
+    </property>
+    <property>
+        <name>spark.driver.memeory</name>
+        <value>1g</value>
+    </property>
+    <property>
+        <name>spark.executor.extraJavaOptions</name>
+        <value>-XX:+PrintGCDetails -Dkey=value -Dnumbers="one two three"</value>
+    </property>
+</configuration>
