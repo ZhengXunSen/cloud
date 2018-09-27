@@ -1,9 +1,13 @@
 package com.zxs.cloud.operation
 
-import com.esotericsoftware.kryo.Kryo
-import org.apache.spark.serializer.KryoRegistrator
-import org.apache.spark.sql.SparkSession
+import java.util.Properties
 
+import com.esotericsoftware.kryo.Kryo
+import org.apache.spark.rdd.RDD
+import org.apache.spark.serializer.KryoRegistrator
+import org.apache.spark.sql.{DataFrame, SparkSession}
+
+case class User(id:Int,name:String)
 class MyRegistrator extends KryoRegistrator{
   override def registerClasses(kryo: Kryo): Unit = {
     kryo.register(Class.forName("org.apache.hadoop.io.NullWritable",false,getClass.getClassLoader()))
@@ -21,14 +25,15 @@ object MapJoin{
     print(results.foreach(result => println("词是：" + result._1 + "出现次数统计为：" + result._2)))*/
 
     val sparkSession = SparkSession.builder().appName("HiveCaseJob").master("local[*]").enableHiveSupport().getOrCreate()
-
-    sparkSession.sql("drop table if exists users")
-    sparkSession.sql("show tables").show()
-    sparkSession.sql("create table if not exists users(id int,name string) row format delimited fields terminated by ' ' stored as textfile")
-    sparkSession.sql("show tables").show()
-    sparkSession.sql("select * from users").show()
-    sparkSession.sql("load data local inpath 'src/main/resources/a.txt' overwrite into table users")
-    sparkSession.sql("select * from users").show()
+    val data = sparkSession.sql("select * from default.test").rdd;
+    val userRdd: RDD[User] = data.map(row => User(row.get(0).asInstanceOf[Int], row.get(1).toString))
+    import sparkSession.implicits._
+    val userDF: DataFrame = userRdd.toDF
+//    userDF.createOrReplaceTempView("userTemp")
+    val prop =new Properties()
+    prop.setProperty("user","zxs")
+    prop.setProperty("password","jfz123456")
+    userDF.write.mode("append").jdbc("jdbc:mysql://zxs-1:3306/dc","user",prop)
 
   }
 

@@ -377,6 +377,7 @@ export SPARK_EXECUTOR_MEMORY=512M
 - 启动spark集群
 >
 1. `cd /spark安装目录/sbin`
+
 2. 添加端口映射
 ```
 #查看开放的端口
@@ -389,8 +390,19 @@ firewall-cmd --zone=public --add-port=7077/tcp --permanent
 firewall-cmd --reload 
 ```
 3. 执行启动脚本 `./start-all.sh`
+
 4. 访问 http://ip:8080/
+
 5. 从节点挂掉后重新启动，sbin目录下执行`start-slave.sh 10.3.20.126:7077`（此url为master节点）
+
+### windows安装spark
+1. 将下载的spark包解压
+
+2.配置环境变量生效
+
+3.cmd打开输入spark-shell能进入spark说明安装成功
+
+4.spark安装需依赖java和scala的环境
 
 ## zookeeper安装
 >
@@ -583,7 +595,7 @@ export HIVE_CONF_DIR=/home/hadoop/apache-hive-3.0.0-bin
 6.将上述hive-site.xml拷贝到$SPARK_HOME/conf目录，将mysql连接的jar包拷贝到lib目录下
 
 7.修改hadoop中hdfs-site.xml文件配置，使之不限用户操作
-```aidl
+```
    <property>
      <name>dfs.permissions.enabled</name>
     <value>false</value>
@@ -591,3 +603,24 @@ export HIVE_CONF_DIR=/home/hadoop/apache-hive-3.0.0-bin
 ```
 
 8.关闭hadoop的安全模式：`hadoop dfsadmin -safemode leave`
+
+## 安装kafka-manager
+1.`git clone https://github.com/yahoo/kafka-manager.git`下载kafka-manager源码
+
+2.通过 cd ~进入当前用户目录，然后通过命令mkdir .sbt创建.sbt目录，进入创建的该目录，使用vi创建repositories文件，编辑内容如下：
+```
+[repositories]
+local
+aliyun: http://maven.aliyun.com/nexus/content/groups/public
+typesafe: http://repo.typesafe.com/typesafe/ivy-releases/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext], bootOnly
+```
+3.然后进入解压后的 Kafka-manager 目录，执行下面的命令：`./sbt clean dist`
+
+4.命令执行完成后，在 target/universal 目录中会生产一个zip压缩包kafka-manager-1.3.3.7.zip。将压缩包拷贝到要部署的目录下解压。
+
+5.在解压后的conf目录中打开 application.conf文件，修改其中的配置信息，最主要的内容为配置kafka的zookeeper连接信息：
+```
+kafka-manager.zkhosts="localhost:2181"
+```
+
+6.启动：`bin/kafka-manager -Dconfig.file=/path/to/application.conf -Dhttp.port=8080`

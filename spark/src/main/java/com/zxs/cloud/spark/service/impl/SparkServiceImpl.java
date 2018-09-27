@@ -14,9 +14,13 @@ import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.deploy.SparkSubmit;
 import org.apache.spark.sql.DataFrameReader;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.streaming.Durations;
+import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
@@ -28,10 +32,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import scala.Tuple2;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.PostConstruct;
+import java.util.*;
 
 /**
  * Created by bill.zheng in 2018/8/22
@@ -57,6 +59,17 @@ public class SparkServiceImpl implements SparkService {
 
     @Autowired
     private KafkaConfig kafkaConfig;
+
+    private Properties properties = new Properties();
+
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+
+    @PostConstruct
+    public void init(){
+        properties.setProperty("user", dataUser);
+        properties.setProperty("password", dataPwd);
+
+    }
 
     @Override
     @SparkConfig(executorMemory = "1500m", sparkMaster = "local[1]", appName = "fileReader")
@@ -94,10 +107,10 @@ public class SparkServiceImpl implements SparkService {
     }
 
     @Override
-    @SparkConfig(executorMemory = "1500m", sparkMaster = "local[2]",appName = "kafka")
+    @SparkConfig(executorMemory = "1500m", sparkMaster = "local[2]",appName = "kafka", sparkUser = "hadoop")
     public void sparkStreaming(SparkConf sparkConf) {
         sparkConf.set("spark.streaming.kafka.maxRatePerPartition", "10");
-        SparkSession sparkSession = SparkSession.builder().config(sparkConf).getOrCreate();
+        SparkSession sparkSession = SparkSession.builder().config(sparkConf).enableHiveSupport().getOrCreate();
         JavaSparkContext sc = new JavaSparkContext(sparkSession.sparkContext());
         sc.setLogLevel("WARN");
         JavaStreamingContext ssc = new JavaStreamingContext(sc, Durations.seconds(10));
@@ -110,17 +123,30 @@ public class SparkServiceImpl implements SparkService {
         topicPartitions.add(new TopicPartition(topics, 2));
 
         //通过KafkaUtils.createDirectStream(...)获得kafka数据，kafka相关参数由kafkaParams指定
-        JavaInputDStream<ConsumerRecord<Object, Object>> lines = KafkaUtils.createDirectStream(ssc,LocationStrategies.PreferConsistent(),ConsumerStrategies.Assign(topicPartitions,kafkaParams));
-        lines.map(ConsumerRecord::value).map(value -> {
+        JavaInputDStream<ConsumerRecord<Object, Object>> lines = KafkaUtils.createDirectStream(ssc,LocationStrategies.PreferConsistent(),
+                ConsumerStrategies.Assign(topicPartitions,kafkaParams));
+        JavaDStream<User> javaDStream = lines.map(ConsumerRecord::value).map(value -> {
             MessageDto messageDto = JsonUtils.parse(value.toString(), MessageDto.class);
-            log.warn("收到的User对象名字为：{}", JsonUtils.parse(messageDto.getData(), User.class).getUserName());
-            return messageDto;
+            return JsonUtils.parse(messageDto.getData(), User.class);
         });
         JavaPairDStream<String, Integer> counts =
                 lines.flatMap(x -> Arrays.asList(x.value().toString().split(" ")).iterator())
                         .mapToPair(x -> new Tuple2<String, Integer>(x, 1))
                         .reduceByKey((x, y) -> x + y);
         counts.foreachRDD(count -> log.warn("统计的结果如下：{}", count.collect()));
+        //处理消息，插入hive
+        javaDStream.foreachRDD(rdd ->{
+            Dataset<Row> dataset = sparkSession.createDataFrame(rdd, User.class);
+            log.warn("测试：{}" , rdd.collect());
+            dataset.show(1);
+            dataset.createOrReplaceTempView("temp");
+            String insertSQL = "insert into table test " +
+                    "select id,userName from temp";
+            sparkSession.sql("use default");
+            sparkSession.sql(insertSQL);
+//            dataset.write().mode(SaveMode.Append).jdbc(dataUrl,"user", properties);
+        });
+
         ssc.start();
         try {
             ssc.awaitTermination();
@@ -135,7 +161,7 @@ public class SparkServiceImpl implements SparkService {
     @SparkConfig(executorMemory = "1500m", sparkMaster = "local[2]",appName = "hive")
     public void sparkSql(SparkConf sparkConf) {
         SparkSession sparkSession = SparkSession.builder().config(sparkConf).enableHiveSupport().getOrCreate();
-        sparkSession.sql("insert into default.test values(3,'dc')").writeStream();
+//        sparkSession.sql("insert into default.test values(3,'dc')").writeStream();
         sparkSession.sql("select * from default.test").show();
     }
 
@@ -144,15 +170,27 @@ public class SparkServiceImpl implements SparkService {
     public void sparkSqlOpMysql(SparkConf sparkConf) {
         SparkSession sparkSession = SparkSession.builder().config(sparkConf).getOrCreate();
         DataFrameReader dataFrame = sparkSession.read().format("jdbc").option("driver", dataDriver).option("url", dataUrl).option("user", dataUser).option("password", dataPwd);
-        dataFrame.option("dbtable", "user");
+        dataFrame.option("dbtable", "user").load();
         SparkContext sc = sparkSession.sparkContext();
-        Arrays.stream(sc.textFile("C:\\Users\\bill.zheng\\Desktop\\a.txt",10).collect()).map(s -> s.split(",")).map(s -> {
+        /*Arrays.stream(sc.textFile("C:\\Users\\bill.zheng\\Desktop\\a.txt",10).collect()).map(s -> s.split(",")).map(s -> {
             User user = new User();
             user.setId(3L);
             user.setUserName("dc");
             return user;
-        });
-        sparkSession.sql("insert into default.test values(3,'dc')").writeStream();
+        });*/
         sparkSession.sql("select * from default.test").show();
+    }
+
+
+    @Override
+    public void sparkSubmit() {
+        String[] arg0=new String[]{
+                "--master","spark://zxs-1:7077",
+                "--class","org.apache.spark.examples.SparkPi",
+                "--name","web polling",
+                "C:\\Users\\bill.zheng\\Desktop\\spark-examples_2.11-2.3.1.jar",
+        };
+        log.warn("提交作业...");
+        SparkSubmit.main(arg0);
     }
 }

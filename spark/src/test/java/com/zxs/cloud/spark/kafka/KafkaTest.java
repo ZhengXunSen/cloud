@@ -25,8 +25,8 @@ public class KafkaTest {
         User user = new User();
         user.setAge(10);
         user.setGender("male");
-        user.setId(1L);
-        user.setUserName("zhangsan");
+        user.setId(3L);
+        user.setUserName("测试");
         zxsProducer.send(user);
     }
 }

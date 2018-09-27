@@ -16,4 +16,6 @@ public interface SparkService {
     void sparkSql(SparkConf sparkConf);
 
     void sparkSqlOpMysql(SparkConf sparkConf);
+
+    void sparkSubmit();
 }

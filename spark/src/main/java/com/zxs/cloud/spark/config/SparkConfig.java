@@ -25,4 +25,6 @@ public @interface SparkConfig {
     String logDir() default "";
 
     String allowMultipleContexts() default "true";
+
+    String sparkUser() default "spark";
 }

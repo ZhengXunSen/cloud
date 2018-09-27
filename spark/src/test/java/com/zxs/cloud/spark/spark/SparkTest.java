@@ -19,6 +19,7 @@ public class SparkTest {
 
     @Autowired
     private SparkService sparkService;
+
     @Test
     public void testSparkKafkaStreaming(){
         try {
@@ -32,5 +33,10 @@ public class SparkTest {
     @Test
     public void testSparkSql(){
         sparkService.sparkSql(new SparkConf());
+    }
+
+    @Test
+    public void testSparkSubmit(){
+        sparkService.sparkSubmit();
     }
 }

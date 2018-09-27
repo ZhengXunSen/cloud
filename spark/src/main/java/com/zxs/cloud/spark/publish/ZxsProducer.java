@@ -24,7 +24,7 @@ public class ZxsProducer {
     //发送消息方法
     public void send(SparkModel sparkModel) {
         MessageDto messageDto = MessageDto.buildMessage(sparkModel.getId(), JsonUtils.json(sparkModel));
-        log.info("message = {}", JsonUtils.json(messageDto));
+        log.warn("message = {}", JsonUtils.json(messageDto));
         kafkaTemplate.send(topic,  JsonUtils.json(messageDto));
     }
 }

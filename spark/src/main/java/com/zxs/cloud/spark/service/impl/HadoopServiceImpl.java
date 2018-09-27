@@ -1,5 +1,6 @@
-package com.zxs.cloud.spark.service;
+package com.zxs.cloud.spark.service.impl;
 
+import com.zxs.cloud.spark.service.HadoopService;
 import com.zxs.cloud.spark.util.HadoopOperationUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.FSDataInputStream;

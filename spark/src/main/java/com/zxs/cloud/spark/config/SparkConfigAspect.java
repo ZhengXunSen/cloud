@@ -75,7 +75,8 @@ public class SparkConfigAspect {
                 .set("spark.executor.memory", sparkConfig.executorMemory())
                 .set("spark.eventLog.enabled", sparkConfig.logEnable())
                 .set("spark.driver.allowMultipleContexts",sparkConfig.allowMultipleContexts())
-                .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
+                .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+                .set("spark.user", sparkConfig.sparkUser());
         setMaster();
         setJars();
         setLogDir();
