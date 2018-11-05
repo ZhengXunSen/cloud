@@ -158,7 +158,7 @@ public class SparkServiceImpl implements SparkService {
     }
 
     @Override
-    @SparkConfig(executorMemory = "1500m", sparkMaster = "local[2]",appName = "hive")
+    @SparkConfig(executorMemory = "1500m", sparkMaster = "spark://zxs-1:7077",appName = "hive")
     public void sparkSql(SparkConf sparkConf) {
         SparkSession sparkSession = SparkSession.builder().config(sparkConf).enableHiveSupport().getOrCreate();
 //        sparkSession.sql("insert into default.test values(3,'dc')").writeStream();
@@ -188,7 +188,9 @@ public class SparkServiceImpl implements SparkService {
                 "--master","spark://zxs-1:7077",
                 "--class","org.apache.spark.examples.SparkPi",
                 "--name","web polling",
-                "C:\\Users\\bill.zheng\\Desktop\\spark-examples_2.11-2.3.1.jar",
+                "--executor-memory","512m",
+                "--total-executor-cores", "1",
+                "hdfs://zxs-1:9000/app/hadoop-3.1.0/dataDir/hdfs/data/spark-examples_2.11-2.3.1.jar",
         };
         log.warn("提交作业...");
         SparkSubmit.main(arg0);

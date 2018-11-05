@@ -1,0 +1,41 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: fetch
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    leaseRenewalIntervalInSeconds: 10
+    metadataMap:
+      instanceId: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${server.port}}}%
+#mybatis config begin
+mybatis:
+  mapper_locations: classpath:mapper/*.xml
+  type-aliases-package: com.zxs.cloud.fetch.model
+  configuration:
+    mapUnderscoreToCamelCase: true
+#mybatis config end
+---
+spring:
+  profiles: dev
+  redis:
+    host: zxs-1
+    port: 6379
+    password:
+    jedis:
+      pool:
+        max-active: 50
+        max-idle: 8
+        max-wait: -1ms
+        min-idle: 4
+    timeout: 3000ms
+datasource:
+  dc:
+    jdbcUrl: jdbc:mysql://zxs-1:3306/dc?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8
+    username: zxs
+    driver-class-name: com.mysql.jdbc.Driver
+    password: jfz123456

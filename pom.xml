@@ -32,6 +32,8 @@
         <module>consul-server</module>
         <module>eureka-server</module>
         <module>spark</module>
+        <module>common-lib</module>
+        <module>fetch</module>
     </modules>
 
     <dependencies>
