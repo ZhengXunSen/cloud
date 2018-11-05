@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum DataSource {
     DC("dc", "数据中心"),
+    FETCH("fetch", "爬虫")
     ;
 
     private final String name;

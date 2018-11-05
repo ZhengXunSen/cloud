@@ -39,3 +39,8 @@ datasource:
     username: zxs
     driver-class-name: com.mysql.jdbc.Driver
     password: jfz123456
+  fetch:
+    jdbcUrl: jdbc:mysql://zxs-1:3306/fetch?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8
+    username: zxs
+    driver-class-name: com.mysql.jdbc.Driver
+    password: jfz123456

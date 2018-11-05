@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import static com.zxs.cloud.fetch.constant.DataSource.DC;
+import static com.zxs.cloud.fetch.constant.DataSource.FETCH;
 
 /**
  * Created by jackie.yu on 2017/7/27.
@@ -42,8 +43,9 @@ public class DataSourceConfig {
     public DataSource dataSource() {
         final MultipleDataSource multipleDataSource = new MultipleDataSource();
         final Map dataSourceMap = new HashMap();
-        final DataSource defaultDataSource = dcDataSource();
+        final DataSource defaultDataSource = fetchDataSource();
         dataSourceMap.put(DC.getName(), dcDataSource());
+        dataSourceMap.put(FETCH.getName(), fetchDataSource());
         multipleDataSource.setTargetDataSources(dataSourceMap);
         multipleDataSource.setDefaultTargetDataSource(defaultDataSource);
         return multipleDataSource;
@@ -58,6 +60,12 @@ public class DataSourceConfig {
     @Bean
     @ConfigurationProperties("datasource.dc")
     public DataSource dcDataSource() {
+        return new HikariDataSource();
+    }
+
+    @Bean
+    @ConfigurationProperties("datasource.fetch")
+    public DataSource fetchDataSource() {
         return new HikariDataSource();
     }
 
