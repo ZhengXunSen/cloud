@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>common-lib</artifactId>
-
+    <name>common-lib</name>
+    <description>通用组件</description>
 
 </project>

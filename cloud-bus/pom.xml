@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
 
     <name>cloud-bus</name>
-    <description>Cloud bus project for Spring Cloud</description>
+    <description>消息总线</description>
 
     <parent>
         <groupId>com.zxs.cloud</groupId>

@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
 
     <name>consul-server</name>
-    <description>Consul server project for Spring Boot</description>
+    <description>consul注册中心</description>
 
     <parent>
         <groupId>com.zxs.cloud</groupId>
