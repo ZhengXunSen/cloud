@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.0.RELEASE</version>
+        <version>2.0.3.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -21,14 +21,14 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>10</java.version>
         <!--<java.version>1.8</java.version>-->
-        <spring-cloud.version>Greenwich.M1</spring-cloud.version>
+        <!--<spring-cloud.version>Greenwich.M1</spring-cloud.version>-->
+        <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
         <jack.version>2.9.6</jack.version>
         <javax.version>2.3.0</javax.version>
     </properties>
 
     <modules>
         <module>config-server</module>
-        <module>cloud-bus</module>
         <module>consul-server</module>
         <module>eureka-server</module>
         <module>spark</module>
@@ -80,7 +80,7 @@
         </dependency>
 
         <!-- jackson json -->
-        <!--<dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <version>${jack.version}</version>
@@ -99,6 +99,6 @@
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-jaxb-annotations</artifactId>
             <version>${jack.version}</version>
-        </dependency>-->
+        </dependency>
     </dependencies>
 </project>

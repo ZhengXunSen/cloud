@@ -1,0 +1,25 @@
+server:
+  port: 8801
+spring:
+  profiles:
+    active: dev
+  application:
+    name: user-service
+  cloud:
+    config:
+      label: 1.0.0
+      name: user
+      discovery:
+        enabled: true
+        service-id: config-server
+      profile: ${spring.profiles.active}
+    bus:
+      trace:
+        enabled: true
+#mybatis config begin
+mybatis:
+  mapper_locations: classpath:mapper/*.xml
+  type-aliases-package: com.zxs.cloud.fetch.model
+  configuration:
+    mapUnderscoreToCamelCase: true
+#mybatis config end

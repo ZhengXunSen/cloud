@@ -1,0 +1,41 @@
+server:
+  port: 8766
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/ZhengXunSen/cloud/     # 配置git仓库的地址
+          search-paths: config/*                         # git仓库地址下的相对地址，可以配置多个，用,分割。
+          username:
+          password:
+          default-label: 1.0.0
+    stream:
+      default-binder: rabbit
+  profiles:
+    active: dev
+### 刷新bus http://config-server:8766/actuator/bus-refresh
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+---
+spring:
+  profiles: dev
+  rabbitmq:
+    virtual-host: yujifang
+    username: yujifang
+    password: yujifang2017
+    addresses: 10.1.2.101
+    port: 5672
+eureka:
+  instance:
+    hostname: config-server
+    instance-id: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${server.port}}
+  client:
+    service-url:
+      defaultZone: http://eureka-server1:8761/eureka/
+    registry-fetch-interval-seconds: 60

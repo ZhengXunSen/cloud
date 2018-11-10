@@ -2,10 +2,25 @@ spring:
   application:
     name: eureka-server
   profiles:
-    active: server1
+    active: dev
 
-### 注册中心集群配置，以不同profile启动###
 ---
+spring:
+  profiles: dev
+server:
+  port: 8761
+eureka:
+  server:
+    enable-self-preservation: false
+  instance:
+    hostname: eureka-server1
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+---
+### 注册中心集群配置，以不同profile启动###
 spring:
   profiles: server1
 server:
