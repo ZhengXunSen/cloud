@@ -5,3 +5,17 @@ spring:
       password: jfz123456
       jdbc-url: jdbc:mysql://zxs-1:3306/api?useUnicode=true&amp;characterEncoding=utf8&amp;mysqlEncoding=utf8
       driver-class-name: com.mysql.jdbc.Driver
+  rabbitmq:
+    virtual-host: yujifang
+    username: yujifang
+    password: yujifang2017
+    addresses: 10.1.2.101
+    port: 5672
+eureka:
+  instance:
+    hostname: front-api
+    instance-id: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${server.port}}
+  client:
+    service-url:
+      defaultZone: http://eureka-server1:8761/eureka/
+    registry-fetch-interval-seconds: 60
