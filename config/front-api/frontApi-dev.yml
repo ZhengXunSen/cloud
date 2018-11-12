@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    hikari:
+      username: zxs
+      password: jfz123456
+      jdbc-url: jdbc:mysql://zxs-1:3306/api?useUnicode=true&amp;characterEncoding=utf8&amp;mysqlEncoding=utf8
+      driver-class-name: com.mysql.jdbc.Driver
