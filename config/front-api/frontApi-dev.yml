@@ -15,8 +15,9 @@ eureka:
   instance:
     hostname: front-api
     instance-id: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${server.port}}
-    metadata-map:
-      cluster: frontApp
+#集群名字配置，turbine监控需要
+#    metadata-map:
+#      cluster: frontApi
   client:
     service-url:
       defaultZone: http://eureka-server1:8761/eureka/

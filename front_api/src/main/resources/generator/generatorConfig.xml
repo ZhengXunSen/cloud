@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>
+        </plugin>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://zxs-1:3306/api?useUnicode=true&amp;characterEncoding=utf8&amp;mysqlEncoding=utf8"
+                        userId="zxs"
+                        password="jfz123456">
+        </jdbcConnection>
+
+        <javaModelGenerator targetPackage="com.jfz.insproduct.model" targetProject="src/main/java"/>
+
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
+
+        <javaClientGenerator targetPackage="com.jfz.insproduct.mapper" targetProject="src/main/java"
+                             type="XMLMAPPER"/>
+        <!--<table tableName="ins_attachment"></table>-->
+        <!--<table tableName="ins_branch_company_info"></table>-->
+        <!--<table tableName="ins_common_insurance"></table>-->
+        <!--<table tableName="ins_company_info"></table>-->
+        <!--<table tableName="ins_guarantee_category_zhongji"></table>-->
+        <!--<table tableName="ins_guarantee_disease_zhongji"></table>-->
+        <!--<table tableName="ins_guarantee_item_zhongji"></table>-->
+        <!--<table tableName="ins_guarantee_money_zhongji"></table>-->
+        <!--<table tableName="ins_rate_detail"></table>-->
+        <!--<table tableName="ins_rate_index"></table>-->
+        <!--<table tableName="ins_disease_dictionary"></table>-->
+        <!--<table tableName="ins_draft"></table>-->
+        <!--<table tableName="ins_annuity_insurance"></table>-->
+        <!--<table tableName="ins_high_end_medical_insurance"></table>-->
+        <!--<table tableName="ins_product_label"></table>-->
+        <!--<table tableName="ins_banner"></table>-->
+        <!--<table tableName="ins_special_topic"></table>-->
+        <!--<table tableName="ins_special_topic_image"></table>-->
+        <!--<table tableName="ins_benefites_category"></table>-->
+        <table tableName="mapping_ins_main_additional"></table>
+    </context>
+</generatorConfiguration>

@@ -1,0 +1,34 @@
+server:
+  port: 8807
+spring:
+  profiles:
+    active: dev
+  application:
+    name: front-api2
+  cloud:
+    config:
+      label: 1.0.0
+      name: frontApi
+      discovery:
+        enabled: true
+        service-id: config-server
+      profile: ${spring.profiles.active}
+    bus:
+      trace:
+        enabled: true
+#mybatis config begin
+mybatis:
+  mapper_locations: classpath:mapper/*.xml
+  type-aliases-package: com.zxs.cloud.front.api.model
+  configuration:
+    mapUnderscoreToCamelCase: true
+#mybatis config end
+hystrix:
+  metrics:
+    enabled: true
+#暴露所有监控url
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
