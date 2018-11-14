@@ -1,9 +1,8 @@
 spring:
   rabbitmq:
-    virtual-host: yujifang
-    username: yujifang
-    password: yujifang2017
-    addresses: 10.1.2.101
+    username: zxs
+    password: zxs123
+    addresses: zxs-1
     port: 5672
 turbine:
 #集群或者监控多个使用
