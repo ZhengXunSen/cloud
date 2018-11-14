@@ -1,3 +1,10 @@
+spirng:
+  rabbitmq:
+    virtual-host: yujifang
+    username: yujifang
+    password: yujifang2017
+    addresses: 10.1.2.101
+    port: 5672
 turbine:
 #集群或者监控多个使用
 #  app-config: front-api,front-api2
@@ -11,13 +18,6 @@ turbine:
 #表明监控的是自定义的集群
 #  cluster-name-expression: metadata['cluster']
   instanceUrlSuffix: /actuator/hystrix.stream
-spirng:
-  rabbitmq:
-    virtual-host: yujifang
-    username: yujifang
-    password: yujifang2017
-    addresses: 10.1.2.101
-    port: 5672
 eureka:
   client:
     service-url:
