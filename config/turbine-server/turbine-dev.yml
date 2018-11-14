@@ -1,4 +1,4 @@
-spirng:
+spring:
   rabbitmq:
     virtual-host: yujifang
     username: yujifang
