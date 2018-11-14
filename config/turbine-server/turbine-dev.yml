@@ -11,7 +11,9 @@ turbine:
 #表明监控的是自定义的集群
 #  cluster-name-expression: metadata['cluster']
   instanceUrlSuffix: /actuator/hystrix.stream
+---
 spirng:
+  profiles: dev
   rabbitmq:
     virtual-host: yujifang
     username: yujifang

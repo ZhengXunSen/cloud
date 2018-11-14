@@ -11,7 +11,7 @@ spring:
       name: turbine
       discovery:
         enabled: true
-        service-id: turbine-server
+        service-id: config-server
       profile: ${spring.profiles.active}
     bus:
       trace:
