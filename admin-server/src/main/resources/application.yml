@@ -9,6 +9,23 @@ spring:
     user:
       name: admin
       password: admin
+  mail:
+    host: smtp.jfz.com
+    username: bill.zheng@jfz.com
+    password: Zxs930422
+    properties:
+      mail.debug: false
+      mail.smtp.auth: true
+  boot:
+    admin:
+      notify:
+        mail:
+          enabled: true
+          to: 1043386358@qq.com
+          from: bill.zheng@jfz.com
+          ignore-changes:
+            -
+              "*:UP" #从任何状态到up状态都不要发邮件通知
 #暴露所有监控url
 management:
   endpoints:

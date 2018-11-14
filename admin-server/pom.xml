@@ -24,7 +24,6 @@
 
     <dependencies>
         <dependency>
-            <!--需使用2.0.1版本的admin-server，高版本不兼容-->
             <groupId>de.codecentric</groupId>
             <artifactId>spring-boot-admin-starter-server</artifactId>
             <!--<version>${spring-boot-admin.version}</version>-->
@@ -44,6 +43,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!-- 邮件服务 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
     </dependencies>
 
