@@ -1,24 +1,31 @@
 server:
-  port: 8771
+  port: 8811
 spring:
   profiles:
     active: dev
   application:
     name: admin-server
-  boot:
-    admin:
-      turbine:
-        cluster: default
-        url: http://localhost:8781/turbine.stream
-    routes:
-      endpoints: env,metrics,trace,dump,jolokia,info,configprops,trace,logfile,refresh,flyway,liquibase,heapdump,activiti
+  security:
+    user:
+      name: admin
+      password: admin
+#暴露所有监控url
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
 ---
 spirng:
   profiles: dev
+#  security:
+#    user:
+#      name: admin
+#      password: admin
 ### 此处dev先注册向其中一台注册中心###
-  output:
-    ansi:
-     enable: true
 eureka:
   client:
     service-url:
@@ -26,4 +33,11 @@ eureka:
       defaultZone: http://eureka-server1:8761/eureka/
     registry-fetch-interval-seconds: 60
   instance:
+    hostname: admin-server
+    instance-id: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${server.port}}
     lease-renewal-interval-in-seconds: 30
+    health-check-url-path: /actuator/health
+# 配置此两项以便服务器能够获取被保护的节点
+    metadata-map:
+      user.name: ${spring.security.user.name}
+      user.password: ${spring.security.user.password}

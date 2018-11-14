@@ -1,7 +1,7 @@
 turbine:
 #集群或者监控多个使用
 #  app-config: front-api,front-api2
-  app-config: front-api,front-api2
+  app-config: front-api
   aggregator:
     cluster-config: default
 #监控相应集群，多个用逗号隔开

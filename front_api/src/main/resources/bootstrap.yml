@@ -1,10 +1,10 @@
 server:
-  port: 8807
+  port: 8806
 spring:
   profiles:
     active: dev
   application:
-    name: front-api2
+    name: front-api
   cloud:
     config:
       label: 1.0.0

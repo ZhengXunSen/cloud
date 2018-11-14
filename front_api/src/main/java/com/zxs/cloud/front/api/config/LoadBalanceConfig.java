@@ -1,5 +1,7 @@
 package com.zxs.cloud.front.api.config;
 
+import com.netflix.loadbalancer.IRule;
+import com.netflix.loadbalancer.RandomRule;
 import feign.Contract;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -22,5 +24,15 @@ public class LoadBalanceConfig {
     @Bean
     public Contract useFeignAnnotations() {
         return new Contract.Default();
+    }
+
+    /**
+     * ribbon loadBalance algorithm
+     * 可在此处注入自定义负载均衡算法
+     * @return
+     */
+    @Bean
+    public IRule ribbonRule() {
+        return new RandomRule();
     }
 }
