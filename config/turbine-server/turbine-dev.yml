@@ -1,5 +1,6 @@
 spring:
   rabbitmq:
+    virtual-host: zxs
     username: zxs
     password: zxs123
     addresses: zxs-1

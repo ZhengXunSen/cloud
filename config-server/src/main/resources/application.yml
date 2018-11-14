@@ -26,11 +26,11 @@ management:
 spring:
   profiles: dev
   rabbitmq:
-    virtual-host: yujifang
-    username: yujifang
-    password: yujifang2017
-    addresses: 10.1.2.101
+    username: zxs
+    password: zxs123
+    addresses: zxs-1
     port: 5672
+    virtual-host: zxs
 eureka:
   instance:
     hostname: config-server
