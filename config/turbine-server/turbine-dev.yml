@@ -14,6 +14,12 @@ turbine:
 ---
 spirng:
   profiles: dev
+  rabbitmq:
+    virtual-host: yujifang
+    username: yujifang
+    password: yujifang2017
+    addresses: 10.1.2.101
+    port: 5672
 eureka:
   client:
     service-url:
