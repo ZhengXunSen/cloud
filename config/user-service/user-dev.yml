@@ -1,3 +1,35 @@
+spring:
+  profiles: dev
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.jdbc.Driver
+      password: jfz123456
+      jdbc-url: jdbc:mysql://zxs-1:3306/dc?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8
+      username: zxs
+  rabbitmq:
+    username: zxs
+    password: zxs123
+    addresses: zxs-1
+    port: 5672
+  sleuth:
+    sampler:
+      probability: 1.0
+  zipkin:
+    sender:
+      type: rabbit
+    base-url: http://zxs-1:9411/
+    locator:
+      discovery:
+        enabled: true
+    discovery-client-enabled: false
+eureka:
+  instance:
+    hostname: user-service
+    instance-id: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${server.port}}
+  client:
+    service-url:
+      defaultZone: http://eureka-server1:8761/eureka/
+    registry-fetch-interval-seconds: 60
 user:
   test:
     name: 李四

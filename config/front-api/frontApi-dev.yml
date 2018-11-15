@@ -11,6 +11,17 @@ spring:
     password: zxs123
     addresses: zxs-1
     port: 5672
+  zipkin:
+    sender:
+      type: rabbit
+    base-url: http://10.3.20.126:9411/
+    locator:
+      discovery:
+        enabled: true
+    discovery-client-enabled: false
+  sleuth:
+    sampler:
+      probability: 1.0
 eureka:
   instance:
     hostname: front-api
