@@ -16,6 +16,17 @@ spring:
     bus:
       trace:
         enabled: true
+  zipkin:
+    sender:
+      type: rabbit
+    base-url: http://10.3.20.126:9411/
+    locator:
+      discovery:
+        enabled: true
+    discovery-client-enabled: false
+  sleuth:
+    sampler:
+      probability: 1.0
 #mybatis config begin
 mybatis:
   mapper_locations: classpath:mapper/*.xml

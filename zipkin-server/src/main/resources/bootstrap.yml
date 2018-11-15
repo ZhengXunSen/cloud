@@ -1,0 +1,61 @@
+server:
+  port: 8786
+spring:
+  profiles:
+    active: dev
+  application:
+    name: zipkin-server
+  cloud:
+    config:
+      label: 1.0.0
+      name: zipkin
+      discovery:
+        enabled: true
+        service-id: config-server
+      profile: ${spring.profiles.active}
+    bus:
+      trace:
+        enabled: true
+    stream:
+      default-binder: rabbit
+  datasource:
+    hikari:
+      username: zxs
+      password: jfz123456
+      jdbc-url: jdbc:mysql://zxs-1:3306/api?useUnicode=true&amp;characterEncoding=utf8&amp;mysqlEncoding=utf8
+      driver-class-name: com.mysql.jdbc.Driver
+  sleuth:
+    sampler:
+      probability: 1.0
+    integration:
+      enabled: true
+  rabbitmq:
+    virtual-host: zxs
+    addresses: zxs-1
+    port: 5672
+    username: zxs
+    password: zxs123
+  zipkin:
+    sender:
+      type: rabbit
+zipkin
+#暴露所有监控url
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+zipkin:
+  storage:
+    type: mysql
+eureka:
+  instance:
+    hostname: zipkin-server
+    instance-id: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${server.port}}
+#集群名字配置，turbine监控需要
+#    metadata-map:
+#      cluster: frontApi
+  client:
+    service-url:
+      defaultZone: http://eureka-server1:8761/eureka/
+    registry-fetch-interval-seconds: 60

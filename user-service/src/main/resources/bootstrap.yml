@@ -5,6 +5,12 @@ spring:
     active: dev
   application:
     name: user-service
+  rabbitmq:
+#    virtual-host: zxs
+    username: zxs
+    password: zxs123
+    addresses: zxs-1
+    port: 5672
   cloud:
     config:
       label: 1.0.0
@@ -16,6 +22,17 @@ spring:
     bus:
       trace:
         enabled: true
+  sleuth:
+    sampler:
+      probability: 1.0
+  zipkin:
+    sender:
+      type: rabbit
+    base-url: http://10.3.20.126:9411/
+    locator:
+      discovery:
+        enabled: true
+    discovery-client-enabled: false
 #mybatis config begin
 mybatis:
   mapper_locations: classpath:mapper/*.xml

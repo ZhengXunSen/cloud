@@ -1,5 +1,7 @@
 package com.zxs.cloud.front.api.controller;
 
+import brave.Span;
+import brave.Tracer;
 import com.zxs.cloud.front.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +17,21 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private Tracer tracer;
 
     @GetMapping("get")
     public String getUserName(){
-        return userService.getUserName();
+        // 创建一个 span
+        final Span span = tracer.newTrace().name("3rd_service");
+        try {
+            span.tag(Span.Kind.CLIENT.name(), "3rd_service");
+            span.annotate(Span.Kind.CONSUMER.name());
+            // 这里时调用第三方 API 的代码
+            return userService.getUserName();
+        } finally {
+            span.tag(Span.Kind.CLIENT.name(), "exception");
+            span.annotate(Span.Kind.CONSUMER.name());
+        }
     }
 }

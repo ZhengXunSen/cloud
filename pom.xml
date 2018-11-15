@@ -43,6 +43,7 @@
         <module>search-service</module>
         <module>admin-server</module>
         <module>turbine-server</module>
+        <module>zipkin-server</module>
     </modules>
 
     <dependencies>
