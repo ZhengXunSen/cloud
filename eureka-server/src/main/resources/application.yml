@@ -3,7 +3,13 @@ spring:
     name: eureka-server
   profiles:
     active: dev
-
+  security:
+    user:
+      password: zxs123
+      name: zxs
+    oauth2:
+      client:
+        provider:
 ---
 spring:
   profiles: dev

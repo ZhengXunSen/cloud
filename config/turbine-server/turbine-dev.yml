@@ -22,7 +22,7 @@ eureka:
   client:
     service-url:
 #      defaultZone: http://eureka-server1:8761/eureka/,http://eureka-server2:8762/eureka/,http://eureka-server3:8763/eureka/
-      defaultZone: http://eureka-server1:8761/eureka/
+      defaultZone: http://zxs:zxs123@eureka-server1:8761/eureka/
     registry-fetch-interval-seconds: 60
   instance:
     lease-renewal-interval-in-seconds: 30
