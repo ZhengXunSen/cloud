@@ -22,16 +22,5 @@ spring:
   sleuth:
     sampler:
       probability: 1.0
-eureka:
-  instance:
-    hostname: front-api
-    instance-id: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${server.port}}
-#集群名字配置，turbine监控需要
-#    metadata-map:
-#      cluster: frontApi
-  client:
-    service-url:
-      defaultZone: http://zxs:zxs123@eureka-server1:8761/eureka/
-    registry-fetch-interval-seconds: 60
 zxs:
   test: 测试远程配置
