@@ -3,7 +3,7 @@ spring:
     virtual-host: zxs
     username: zxs
     password: zxs123
-    addresses: zxs-1
+    host: zxs-1
     port: 5672
 turbine:
 #集群或者监控多个使用
